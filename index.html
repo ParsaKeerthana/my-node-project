@@ -1,0 +1,29 @@
+<!-- index.html -->
+<html>
+  <body>
+    <form id="userForm">
+      <input type="text" id="userId" placeholder="Enter user ID" />
+      <button type="submit">Get User</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+      document.getElementById('userForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const userId = document.getElementById('userId').value;
+        fetch('http://localhost:4000/graphql', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: `query GetUser($id: ID!) { user(id: $id) { id name email } }`,
+            variables: { id: userId },
+          }),
+        })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+        });
+      });
+    </script>
+  </body>
+</html>
